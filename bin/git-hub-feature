@@ -34,7 +34,7 @@ update(){
 
 	git checkout $MASTER
 	echo "Rebasing upstream updates into master..."
-	git pull $Q --rebase $UPSTREAM $MASTER
+	git pull $MASTER
 	echo "Rebasing master into $BRANCH..."
 	git checkout $Q $BRANCH
 	git rebase $Q $MASTER
@@ -97,7 +97,7 @@ finish(){
 	git checkout $MASTER >/dev/null
 	_stash_pop
 
-	git pull --rebase $UPSTREAM $MASTER
+	git pull --rebase $MASTER
 	git push $ORIGIN $BRANCH
 	git branch -D $BRANCH
 	git push origin --delete $BRANCH
