@@ -9,7 +9,7 @@ start(){
 	# Just a semantic `git checkout -b $BRANCH $MASTER`
 	git checkout -b feature/$BRANCH $MASTER
 	git push --set-upstream origin $BRANCH
-	git push origin $BRANCH
+	git push origin feature/$BRANCH
 	git stash pop
 }
 
@@ -17,9 +17,9 @@ start(){
 publish(){
 	BRANCH=${1:-$CUR_BRANCH}
 
-	git hub-feature update $BRANCH
+	git hub-feature update feature/$BRANCH
 
-	git push $ORIGIN $BRANCH
+	git push $ORIGIN feature/$BRANCH
 }
 
 # Get all updates from upstream into the current branch.
