@@ -88,24 +88,24 @@ finish(){
 	echo "iniciando finish 2"
 	PULL_NUMBER=$(github_pr_number $BRANCH)
 	echo "iniciando finish 3"
-	github_put /repos/$GH_UPSTREAM/pulls/$PULL_NUMBER/merge "{}" >| .tmp_merge
+	#github_put /repos/$GH_UPSTREAM/pulls/$PULL_NUMBER/merge "{}" >| .tmp_merge
 
-	if [ "x$(cat .tmp_merge | json merged)" == "xtrue" ] ; then
-		echo "iniciando finish 4"
-		echo "Pull request $PULL_NUMBER successfully merged."
-		_stash
-		git checkout $Q $MASTER >/dev/null
-		_stash_pop
+	#if [ "x$(cat .tmp_merge | json merged)" == "xtrue" ] ; then
+	echo "iniciando finish 4"
+	echo "Pull request $PULL_NUMBER successfully merged."
+	_stash
+	git checkout $Q $MASTER >/dev/null
+	_stash_pop
 
-		git pull $Q --rebase $UPSTREAM $MASTER
-		git push $Q $ORIGIN :$BRANCH
-		git branch $Q -D $BRANCH
-		git push origin --delete $BRANCH
-	else
-		cat .tmp_merge | json message
-	fi
+	git pull $Q --rebase $UPSTREAM $MASTER
+	git push $Q $ORIGIN :$BRANCH
+	git branch $Q -D $BRANCH
+	git push origin --delete $BRANCH
+	#else
+	#	cat .tmp_merge | json message
+	#fi
 
-	rm .tmp_merge
+	#rm .tmp_merge
 }
 
 usage(){
