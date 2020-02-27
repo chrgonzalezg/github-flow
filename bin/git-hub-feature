@@ -79,16 +79,17 @@ review(){
 
 # Close the feature branch, if it is mergeable.
 finish(){
-	echo "iniciando finish"
+	echo "iniciando finish 1"
 	BRANCH=${1:-$CUR_BRANCH}
 
 	git hub-feature publish $BRANCH
-
+	echo "iniciando finish 2"
 	PULL_NUMBER=$(github_pr_number $BRANCH)
-
+	echo "iniciando finish 3"
 	github_put /repos/$GH_UPSTREAM/pulls/$PULL_NUMBER/merge "{}" >| .tmp_merge
 
 	if [ "x$(cat .tmp_merge | json merged)" == "xtrue" ] ; then
+		echo "iniciando finish 4"
 		echo "Pull request $PULL_NUMBER successfully merged."
 		_stash
 		git checkout $Q $MASTER >/dev/null
