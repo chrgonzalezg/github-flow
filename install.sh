@@ -28,7 +28,7 @@ if [ -d .ghf ] ; then
 	echo "github-flow already installed, updating from origin."
 	git pull origin master
 else
-	git clone https://github.com/github-flow/github-flow.git .ghf
+	git clone https://github.com/chrgonzalezg/github-flow.git .ghf
 fi
 
 # Only modify the path if the newly installed ghf doesn't exist.
