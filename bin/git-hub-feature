@@ -98,7 +98,7 @@ finish(){
 	_stash_pop
 
 	git pull $Q --rebase $UPSTREAM $MASTER
-	git push $Q $ORIGIN :$BRANCH
+	git push $Q $ORIGIN $BRANCH
 	git branch $Q -D $BRANCH
 	git push origin --delete $BRANCH
 	#else
