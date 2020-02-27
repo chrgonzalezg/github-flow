@@ -94,12 +94,12 @@ finish(){
 	echo "iniciando finish 4"
 	echo "Pull request $PULL_NUMBER successfully merged."
 	_stash
-	git checkout $Q $MASTER >/dev/null
+	git checkout $MASTER >/dev/null
 	_stash_pop
 
-	git pull $Q --rebase $UPSTREAM $MASTER
-	git push $Q $ORIGIN $BRANCH
-	git branch $Q -D $BRANCH
+	git pull --rebase $UPSTREAM $MASTER
+	git push $ORIGIN $BRANCH
+	git branch -D $BRANCH
 	git push origin --delete $BRANCH
 	#else
 	#	cat .tmp_merge | json message
