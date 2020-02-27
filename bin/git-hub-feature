@@ -15,15 +15,11 @@ start(){
 
 # Make the feature branch available on the user's fork.
 publish(){
-	echo "iniciando publish"
 	BRANCH=${1:-$CUR_BRANCH}
 
 	git hub-feature update $BRANCH
 
-	echo "Forcing updates to https://github.com/$GH_ORIGIN/tree/$BRANCH"
-	git push --set-upstream origin $BRANCH
 	git push $ORIGIN $BRANCH
-	echo "despues del push"
 }
 
 # Get all updates from upstream into the current branch.
@@ -34,7 +30,7 @@ update(){
 
 	git checkout $MASTER
 	echo "Rebasing upstream updates into master..."
-	git pull $MASTER
+	git pull $ORIGIN $MASTER
 	echo "Rebasing master into $BRANCH..."
 	git checkout $Q $BRANCH
 	git rebase $Q $MASTER
@@ -46,58 +42,18 @@ update(){
 	_stash_pop
 }
 
-# Create a pull request to review the feature branch.
-review(){
-	BRANCH=${1:-$CUR_BRANCH}
-
-	git hub-feature publish $BRANCH
-
-	PULL_NUMBER=$(github_pr_number $BRANCH)
-
-	# Check if the PR already exists
-	if [ -z "$PULL_NUMBER" ] ; then
-		# Prepare the JSON for the pull request.
-		# The title is the most recent commit message at time of starting the review.
-		TITLE='"title":"'"$BRANCH: $(git log -1 --pretty=format:'%s')"'"'
-		BODY='"body":"'"$(git log --pretty=format:'%h - %s <%an>' $MASTER.. | sed ':a;N;s/\n/\\n/g;b a')"'"'
-		BASE='"base":"'"$GH_UPSTREAM_USER:$MASTER"'"'
-		BASE_SHA='"base_sha":"'"$(git rev-parse $MASTER)"'"'
-		HEAD='"head":"'"$GH_ORIGIN_USER:$BRANCH"'"'
-		HEAD_SHA='"head_sha":"'"$(git rev-parse $BRANCH)"'"'
-
-		echo "{$TITLE,$BODY,$BASE,$HEAD,$BASE_SHA,$HEAD_SHA}" >| .tmp_pr_req
-
-		github /repos/$GH_UPSTREAM/pulls .tmp_pr_req >| .tmp_pr_res
-
-		PULL_NUMBER=$(github_pr_number $BRANCH)
-	fi
-
-	PULL_URL="http://github.com/$GH_UPSTREAM/pull/$PULL_NUMBER"
-
-	echo "Pull request is at $PULL_URL"
-
-	rm .tmp_pr*
-}
 
 # Close the feature branch, if it is mergeable.
 finish(){
-	echo "iniciando finish 1"
 	BRANCH=${1:-$CUR_BRANCH}
 
 	git hub-feature publish $BRANCH
-	echo "iniciando finish 2"
-	PULL_NUMBER=$(github_pr_number $BRANCH)
-	echo "iniciando finish 3"
-	#github_put /repos/$GH_UPSTREAM/pulls/$PULL_NUMBER/merge "{}" >| .tmp_merge
 
-	#if [ "x$(cat .tmp_merge | json merged)" == "xtrue" ] ; then
-	echo "iniciando finish 4"
-	echo "Pull request $PULL_NUMBER successfully merged."
 	_stash
 	git checkout $MASTER >/dev/null
 	_stash_pop
 
-	git pull --rebase $MASTER
+	git pull --rebase $ORIGIN $MASTER
 	git push $ORIGIN $BRANCH
 	git branch -D $BRANCH
 	git push origin --delete $BRANCH
@@ -130,7 +86,6 @@ case "$command" in
 	s | start) start $@ ;;
 	p | publish) publish $@ ;;
 	u | update) update $@ ;;
-	r | review) review $@ ;;
 	f | finish) finish $@ ;;
 	h | help) help ;;
 	*) usage ;;
