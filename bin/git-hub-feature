@@ -22,6 +22,7 @@ publish(){
 
 	echo "Forcing updates to https://github.com/$GH_ORIGIN/tree/$BRANCH"
 	git push $Q --force $ORIGIN $BRANCH
+	echo "despues del push"
 }
 
 # Get all updates from upstream into the current branch.
@@ -86,7 +87,7 @@ finish(){
 	echo "iniciando finish 2"
 	PULL_NUMBER=$(github_pr_number $BRANCH)
 	echo "iniciando finish 3"
-	#github_put /repos/$GH_UPSTREAM/pulls/$PULL_NUMBER/merge "{}" >| .tmp_merge
+	github_put /repos/$GH_UPSTREAM/pulls/$PULL_NUMBER/merge "{}" >| .tmp_merge
 
 	if [ "x$(cat .tmp_merge | json merged)" == "xtrue" ] ; then
 		echo "iniciando finish 4"
