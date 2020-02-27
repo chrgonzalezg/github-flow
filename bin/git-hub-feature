@@ -8,11 +8,14 @@ start(){
 	git stash
 	# Just a semantic `git checkout -b $BRANCH $MASTER`
 	git checkout -b $BRANCH $MASTER
+	git push --set-upstream origin $BRANCH
+	git push origin $BRANCH
 	git stash pop
 }
 
 # Make the feature branch available on the user's fork.
 publish(){
+	echo "iniciando publish"
 	BRANCH=${1:-$CUR_BRANCH}
 
 	git hub-feature update $BRANCH
@@ -76,6 +79,7 @@ review(){
 
 # Close the feature branch, if it is mergeable.
 finish(){
+	echo "iniciando finish"
 	BRANCH=${1:-$CUR_BRANCH}
 
 	git hub-feature publish $BRANCH
@@ -93,6 +97,7 @@ finish(){
 		git pull $Q --rebase $UPSTREAM $MASTER
 		git push $Q $ORIGIN :$BRANCH
 		git branch $Q -D $BRANCH
+		git push origin --delete $BRANCH
 	else
 		cat .tmp_merge | json message
 	fi
