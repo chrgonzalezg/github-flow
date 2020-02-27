@@ -7,7 +7,7 @@ start(){
 	BRANCH=${1:?"Please specify a branch name."}
 	git stash
 	# Just a semantic `git checkout -b $BRANCH $MASTER`
-	git checkout -b $BRANCH $MASTER
+	git checkout -b feature/$BRANCH $MASTER
 	git push --set-upstream origin $BRANCH
 	git push origin $BRANCH
 	git stash pop
