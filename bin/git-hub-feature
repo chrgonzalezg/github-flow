@@ -21,7 +21,8 @@ publish(){
 	git hub-feature update $BRANCH
 
 	echo "Forcing updates to https://github.com/$GH_ORIGIN/tree/$BRANCH"
-	git push $Q --force $ORIGIN $BRANCH
+	git push --set-upstream origin $BRANCH
+	git push $ORIGIN $BRANCH
 	echo "despues del push"
 }
 
