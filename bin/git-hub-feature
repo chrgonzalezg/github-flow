@@ -4,12 +4,14 @@ source git-hub-helpers
 
 # Begin working on a new feature
 start(){
-	BRANCH=${1:?"Please specify a branch name."}
+	BRANCH="feature/"${1:?"Please specify a branch name."}
 	git stash
 	# Just a semantic `git checkout -b $BRANCH $MASTER`
+        git checkout $MASTER
+        git pull $Q origin $MASTER
 	git checkout -b $BRANCH $MASTER
-	git push --set-upstream origin $BRANCH
-	git push origin $BRANCH
+	git push $Q --set-upstream origin $BRANCH
+	git push $Q origin $BRANCH
 	git stash pop
 }
 
@@ -30,7 +32,7 @@ update(){
 
 	git checkout $MASTER
 	echo "Rebasing upstream updates into master..."
-	git pull $ORIGIN $MASTER
+	git pull $Q $ORIGIN $MASTER
 	echo "Rebasing master into $BRANCH..."
 	git checkout $Q $BRANCH
 	git rebase $Q $MASTER
@@ -53,10 +55,10 @@ finish(){
 	git checkout $MASTER >/dev/null
 	_stash_pop
 
-	git pull --rebase $ORIGIN $MASTER
-	git push $ORIGIN $BRANCH
+	git pull $Q --rebase $ORIGIN $MASTER
+	git push $Q $ORIGIN $BRANCH
 	git branch -D $BRANCH
-	git push origin --delete $BRANCH
+	git push $Q origin --delete $BRANCH
 	#else
 	#	cat .tmp_merge | json message
 	#fi
